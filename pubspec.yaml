@@ -1,0 +1,9 @@
+name: unitype
+description: A smart image board.
+version: 0.1.0
+
+environment:
+  sdk: ">=2.3.0"
+
+dependencies:
+  test: any
