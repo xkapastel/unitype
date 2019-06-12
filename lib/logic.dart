@@ -17,4 +17,5 @@
 
 /// The combinatory logic foundation of Unitype.
 
+export "src/logic/program.dart";
 export "src/logic/environment.dart";
