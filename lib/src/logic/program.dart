@@ -20,10 +20,6 @@
 abstract class Program {
   bool get isObject => false;
   void call(Reduce client);
-
-  static Program read(String src) {
-    return null;
-  }
 }
 
 abstract class Reduce {
@@ -128,8 +124,8 @@ class Number extends Program {
 }
 
 class Binary extends Program {
-  final String name;
-  Binary(String this.name);
+  final String value;
+  Binary(String this.value);
 
   @override
   bool get isObject => true;
@@ -140,8 +136,8 @@ class Binary extends Program {
 }
 
 class Variable extends Program {
-  final String name;
-  Variable(String this.name);
+  final String value;
+  Variable(String this.value);
 
   void call(Reduce client) {
     client.reduceVariable(this);
@@ -149,8 +145,8 @@ class Variable extends Program {
 }
 
 class Reference extends Program {
-  final String name;
-  Reference(String this.name);
+  final String value;
+  Reference(String this.value);
 
   void call(Reduce client) {
     client.reduceReference(this);

@@ -15,7 +15,40 @@
 // License along with this program.  If not, see
 // <https://www.gnu.org/licenses/.
 
-/// The combinatory logic foundation of Unitype.
+import "program.dart";
+import "read.dart";
+import "evaluate.dart";
+import "print.dart";
 
-export "src/logic/program.dart";
-export "src/logic/database.dart";
+/// A database normalizes programs, and manages definitions.
+class Database {
+  Map<String, Program> _data;
+  Read _read;
+  Evaluate _evaluate;
+  Print _print;
+
+  Database() {
+    _data = Map();
+    _read = Read();
+    _evaluate = Evaluate();
+    _print = Print();
+  }
+
+  String call(String src) {
+    return _print(_evaluate(_read(src)));
+  }
+
+  String operator [](String key) {
+    var program = _data[key];
+    return _print(program);
+  }
+
+  void operator []=(String key, String value) {
+    var program = _read(value);
+    _data[key] = program;
+  }
+
+  void remove(String key) {
+    _data.remove(key);
+  }
+}

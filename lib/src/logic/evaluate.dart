@@ -15,17 +15,10 @@
 // License along with this program.  If not, see
 // <https://www.gnu.org/licenses/.
 
-/// An environment normalizes programs, and manages definitions.
-class Environment {
-  dynamic call(dynamic src) {
+import "program.dart";
+
+class Evaluate {
+  Program call(Program src) {
     return src;
-  }
-
-  dynamic operator [](dynamic key) {
-    return null;
-  }
-
-  void operator []=(dynamic key, dynamic value) {
-    //
   }
 }

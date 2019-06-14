@@ -19,7 +19,7 @@ import "package:test/test.dart";
 import "package:unitype/logic.dart" as logic;
 
 void main() {
-  var env = logic.Environment();
+  var db = logic.Database();
   var src = {
     "[foo] [bar] a": "bar [foo]",
     "[foo] [bar] b": "[[foo] bar]",
@@ -29,7 +29,7 @@ void main() {
   for (var entry in src.entries) {
     var program = entry.key;
     var expected = entry.value;
-    var actual = env(program);
+    var actual = db(program);
     test("${program} = ${expected}", () {
       expect(actual, equals(expected));
     });
