@@ -27,7 +27,7 @@ class Database {
   Evaluate _evaluate;
   Print _print;
   Program _kId;
-  Program _kApp;
+  Program _kApply;
   Program _kBind;
   Program _kCopy;
   Program _kDrop;
@@ -38,14 +38,14 @@ class Database {
     _evaluate = Evaluate(this);
     _print = Print();
     _kId = Id();
-    _kApp = App();
+    _kApply = Apply();
     _kBind = Bind();
     _kCopy = Copy();
     _kDrop = Drop();
   }
 
   Program get id => _kId;
-  Program get app => _kApp;
+  Program get apply => _kApply;
   Program get bind => _kBind;
   Program get copy => _kCopy;
   Program get drop => _kDrop;

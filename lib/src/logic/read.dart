@@ -105,7 +105,7 @@ class Read {
         var program = null;
         switch (value) {
           case "a":
-            program = _db.app;
+            program = _db.apply;
             break;
           case "b":
             program = _db.bind;

@@ -24,7 +24,7 @@ abstract class Program {
 
 abstract class Reduce {
   void reduceId(Id code);
-  void reduceApp(App code);
+  void reduceApply(Apply code);
   void reduceBind(Bind code);
   void reduceCopy(Copy code);
   void reduceDrop(Drop code);
@@ -44,9 +44,9 @@ class Id extends Program {
   }
 }
 
-class App extends Program {
+class Apply extends Program {
   void call(Reduce client) {
-    client.reduceApp(this);
+    client.reduceApply(this);
   }
 }
 

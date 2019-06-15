@@ -34,7 +34,7 @@ class Print implements Reduce {
     //
   }
 
-  void reduceApp(App program) {
+  void reduceApply(Apply program) {
     _buf.write("a");
   }
 

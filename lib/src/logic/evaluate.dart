@@ -114,7 +114,7 @@ class Evaluate implements Reduce {
     //
   }
 
-  void reduceApp(App program) {
+  void reduceApply(Apply program) {
     _require(2);
     var block = _popQuote();
     var value = _pop();
