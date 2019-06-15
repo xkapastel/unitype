@@ -16,21 +16,12 @@
 // <https://www.gnu.org/licenses/.
 
 import "program.dart";
+import "database.dart";
 
 class Read {
-  Id _kId;
-  App _kApp;
-  Bind _kBind;
-  Copy _kCopy;
-  Drop _kDrop;
+  Database _db;
 
-  Read() {
-    _kId = Id();
-    _kApp = App();
-    _kBind = Bind();
-    _kCopy = Copy();
-    _kDrop = Drop();
-  }
+  Read(Database this._db);
 
   Program call(String source) {
     List<Program> build = [];
@@ -68,11 +59,8 @@ class Read {
         if (stack.isEmpty) {
           throw ReadError(source, index, "unbalanced brackets");
         }
-        Program program = _kId;
-        for (var child in build.reversed) {
-          program = _sequence(child, program);
-        }
-        program = _quote(program);
+        var body = build.reversed.fold(_db.id, _db.sequenceR);
+        var program = _db.quote(body);
         build = stack.removeLast();
         build.add(program);
         index++;
@@ -86,7 +74,7 @@ class Read {
           throw ReadError(source, index, "unbalanced quotes");
         }
         var value = source.substring(start, index);
-        var program = _text(value);
+        var program = _db.text(value);
         build.add(program);
         index++;
       } else if (_isHash(rune)) {
@@ -94,21 +82,21 @@ class Read {
         var start = index;
         skipUntil(_isSpace);
         var value = source.substring(start, index);
-        var program = _tag(value);
+        var program = _db.tag(value);
         build.add(program);
       } else if (_isDollar(rune)) {
         index++;
         var start = index;
         skipUntil(_isSpace);
         var value = source.substring(start, index);
-        var program = _reference(value);
+        var program = _db.reference(value);
         build.add(program);
       } else if (_isPercent(rune)) {
         index++;
         var start = index;
         skipUntil(_isSpace);
         var value = source.substring(start, index);
-        var program = _binary(value);
+        var program = _db.binary(value);
         build.add(program);
       } else if (_isAlpha(rune)) {
         var start = index;
@@ -117,19 +105,19 @@ class Read {
         var program = null;
         switch (value) {
           case "a":
-            program = _kApp;
+            program = _db.app;
             break;
           case "b":
-            program = _kBind;
+            program = _db.bind;
             break;
           case "c":
-            program = _kCopy;
+            program = _db.copy;
             break;
           case "d":
-            program = _kDrop;
+            program = _db.drop;
             break;
           default:
-            program = _variable(value);
+            program = _db.variable(value);
             break;
         }
         build.add(program);
@@ -139,48 +127,7 @@ class Read {
         throw ReadError(source, index, "unknown rune");
       }
     }
-    Program program = _kId;
-    for (var child in build.reversed) {
-      program = _sequence(child, program);
-    }
-    return program;
-  }
-
-  Program _tag(String value) {
-    return Tag(value);
-  }
-
-  Program _binary(String value) {
-    return Binary(value);
-  }
-
-  Program _reference(String value) {
-    return Reference(value);
-  }
-
-  Program _text(String value) {
-    return Text(value);
-  }
-
-  Program _quote(Program body) {
-    return Quote(body);
-  }
-
-  Program _sequence(Program fst, Program snd) {
-    if (snd is Id) {
-      return fst;
-    } else if (fst is Id) {
-      return snd;
-    } else if (fst is Sequence) {
-      var inner = _sequence(fst.snd, snd);
-      return _sequence(fst.fst, inner);
-    } else {
-      return Sequence(fst, snd);
-    }
-  }
-
-  Program _variable(String value) {
-    return Variable(value);
+    return build.reversed.fold(_db.id, _db.sequenceR);
   }
 
   bool _isLeftBracket(String rune) {

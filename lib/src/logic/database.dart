@@ -26,26 +26,94 @@ class Database {
   Read _read;
   Evaluate _evaluate;
   Print _print;
+  Program _kId;
+  Program _kApp;
+  Program _kBind;
+  Program _kCopy;
+  Program _kDrop;
 
   Database() {
     _data = Map();
-    _read = Read();
-    _evaluate = Evaluate();
+    _read = Read(this);
+    _evaluate = Evaluate(this);
     _print = Print();
+    _kId = Id();
+    _kApp = App();
+    _kBind = Bind();
+    _kCopy = Copy();
+    _kDrop = Drop();
   }
 
-  String call(String src) {
-    return _print(_evaluate(_read(src)));
+  Program get id => _kId;
+  Program get app => _kApp;
+  Program get bind => _kBind;
+  Program get copy => _kCopy;
+  Program get drop => _kDrop;
+
+  Program quote(Program body) {
+    return Quote(body);
   }
 
-  String operator [](String key) {
-    var program = _data[key];
+  Program sequence(Program fst, Program snd) {
+    if (snd is Id) {
+      return fst;
+    }
+    if (fst is Id) {
+      return snd;
+    }
+    if (fst is Sequence) {
+      var inner = sequence(fst.snd, snd);
+      return sequence(fst.fst, inner);
+    }
+    return Sequence(fst, snd);
+  }
+
+  Program sequenceR(Program fst, Program snd) {
+    return sequence(snd, fst);
+  }
+
+  Program tag(String value) {
+    return Tag(value);
+  }
+
+  Program reference(String value) {
+    return Reference(value);
+  }
+
+  Program variable(String value) {
+    return Variable(value);
+  }
+
+  Program binary(String value) {
+    return Binary(value);
+  }
+
+  Program text(String value) {
+    return Text(value);
+  }
+
+  Program number(int value) {
+    return Number(value);
+  }
+
+  Program read(String src) {
+    return _read(src);
+  }
+
+  String print(Program program) {
     return _print(program);
   }
 
-  void operator []=(String key, String value) {
-    var program = _read(value);
-    _data[key] = program;
+  Program evaluate(Program src) {
+    return _evaluate(src);
+  }
+
+  Program operator [](String key) {
+    return _data[key];
+  }
+
+  void operator []=(String key, Program value) {
+    _data[key] = value;
   }
 
   void remove(String key) {

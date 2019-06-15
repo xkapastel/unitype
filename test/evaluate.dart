@@ -27,9 +27,10 @@ void main() {
     "[foo] [bar] d": "[foo]",
   };
   for (var entry in src.entries) {
-    var program = entry.key;
+    var program = db.read(entry.key);
     var expected = entry.value;
-    var actual = db(program);
+    var residual = db.evaluate(program);
+    var actual = db.print(residual);
     test("${program} = ${expected}", () {
       expect(actual, equals(expected));
     });
